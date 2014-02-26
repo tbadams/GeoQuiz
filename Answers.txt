@@ -1,0 +1,22 @@
+QUESTIONS:
+
+Q1: "m" stands for "member variable", as "s" stands for "static".
+
+Q2: "this" would have refered to the OnCLickListener being defined, so we need to specify the enclosing class.
+
+Q3: I don't find 1.13 unclear, so I am guessing, but the way the occurs to me to break this into 2 statements is:
+
+ Toast toast = Toast.makeText(QuizActivity.this,
+                      R.string.incorrect_toast,
+                      Toast.LENGTH_SHORT);
+	toast.show();
+
+I prefer the one statement version.  While it is crammed and less explicit about exactly what is transpiring, the first version communicates that everything is happenning at once, and that we are not going to need this Toast object later.  Furthermore, this template is incredibly common and shouldn't phase those familiar with it.
+
+Q4: Ideally, the model should be a separate entity from the controller.  In this case, the model data is declared inside the controller, which is abstractionistically(sp) problematic. Also, other datastructures or databases could provide more complex funcitonality.
+
+Q5: findViewById is defined in Activity.  QuizActivity inherits findViewById from its superclass Activity.  Although we are finding a Button in this case, the method knows only that the object is a View. We cast the object to the subclass Button to inform Java of its more specific type.
+
+Q6: updateQuestion accesses member variable mQuestionTextView and thus requires an instance to perform.
+
+Q7: messageResId userPressedTrue == answerIsTrue ? R.string.correct_toast : R.string.incorrect_toast;
