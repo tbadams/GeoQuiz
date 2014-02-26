@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +21,7 @@ public class QuizActivity extends Activity {
    */
 	private Button mTrueButton;
 	private Button mFalseButton;
-	private ImageButton mNextButton;
-	private ImageButton mPrevButton;
+	private Button mNextButton;
 	private TextView mQuestionTextView;
 	
 	/*
@@ -70,18 +68,8 @@ public class QuizActivity extends Activity {
 		});
 		
 		NextListener nextListener = new NextListener();
-		mNextButton = (ImageButton)findViewById(R.id.next_button);
+		mNextButton = (Button)findViewById(R.id.next_button);
 		mNextButton.setOnClickListener(nextListener);
-		mQuestionTextView.setOnClickListener(nextListener);
-		
-		mPrevButton = (ImageButton)findViewById(R.id.prev_button);
-    mPrevButton.setOnClickListener(new View.OnClickListener() {
-      
-      @Override
-      public void onClick(View v) {
-        incrementQuestion(-1);
-      }
-    });
 		
 		updateQuestion();
 	}
