@@ -2,6 +2,7 @@ package com.bignerdranch.android.geoquiz;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,9 @@ import android.widget.Toast;
  * @author Tadams
  */
 public class QuizActivity extends Activity {
+  
+  private static final String TAG = "QuizActivity";
+  private static final String KEY_INDEX = "index";
 	
   /*
    *  Screen elements.
@@ -71,6 +75,10 @@ public class QuizActivity extends Activity {
 		mNextButton = (Button)findViewById(R.id.next_button);
 		mNextButton.setOnClickListener(nextListener);
 		
+		if(savedInstanceState != null){
+		  mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+		}
+		
 		updateQuestion();
 	}
 
@@ -105,6 +113,13 @@ public class QuizActivity extends Activity {
 	  mCurrentIndex = (mCurrentIndex + numToInc) % mQuestionBank.length;
     int question = mQuestionBank[mCurrentIndex].getQuestion();
     mQuestionTextView.setText(question);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState){
+	  super.onSaveInstanceState(savedInstanceState);
+	  Log.i(TAG, "onSaveInstanceState");
+	  savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
 	}
 	
 	private class NextListener implements View.OnClickListener {
