@@ -1,6 +1,7 @@
 package com.bignerdranch.android.geoquiz;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +27,7 @@ public class QuizActivity extends Activity {
 	private Button mTrueButton;
 	private Button mFalseButton;
 	private Button mNextButton;
+	private Button mCheatButton;
 	private TextView mQuestionTextView;
 	
 	/*
@@ -40,6 +42,8 @@ public class QuizActivity extends Activity {
 	};
 	
 	private int mCurrentIndex = 0;
+	
+	private boolean mIsCheater;
 
 	/**
 	 * Creates the activity, setting up the initial view and the behavior of the Buttons.
@@ -75,6 +79,18 @@ public class QuizActivity extends Activity {
 		mNextButton = (Button)findViewById(R.id.next_button);
 		mNextButton.setOnClickListener(nextListener);
 		
+		mCheatButton = (Button)findViewById(R.id.cheatButton);
+		mCheatButton.setOnClickListener(new View.OnClickListener() {
+      
+      @Override
+      public void onClick(View v) {
+        Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+        i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, 
+            mQuestionBank[mCurrentIndex].isTrueQuestion());
+        startActivityForResult(i, 0);
+      }
+    });
+		
 		if(savedInstanceState != null){
 		  mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
 		}
@@ -99,20 +115,23 @@ public class QuizActivity extends Activity {
 	
 	private void checkAnswer(boolean userPressedTrue) {
 	  int toastTextId = 0;
-	  if(mQuestionBank[mCurrentIndex].isTrueQuestion() == userPressedTrue){
-	    toastTextId = R.string.correct_toast;
+	  if(mIsCheater) {
+	    toastTextId = R.string.judgment_toast;
 	  } else {
-	    toastTextId = R.string.incorrect_toast;
+  	  if(mQuestionBank[mCurrentIndex].isTrueQuestion() == userPressedTrue){
+  	    toastTextId = R.string.correct_toast;
+  	  } else {
+  	    toastTextId = R.string.incorrect_toast;
+  	  }
 	  }
-	  
 	  Toast.makeText(this, toastTextId, Toast.LENGTH_LONG).show();
 	}
 	
 	private void incrementQuestion(int numToInc){
 	  while(numToInc < 0){ numToInc += mQuestionBank.length;}
 	  mCurrentIndex = (mCurrentIndex + numToInc) % mQuestionBank.length;
-    int question = mQuestionBank[mCurrentIndex].getQuestion();
-    mQuestionTextView.setText(question);
+	  mIsCheater = false;
+    updateQuestion();
 	}
 	
 	@Override
@@ -120,6 +139,14 @@ public class QuizActivity extends Activity {
 	  super.onSaveInstanceState(savedInstanceState);
 	  Log.i(TAG, "onSaveInstanceState");
 	  savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  if (data == null) {
+	    return;
+	  }
+	  mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
 	}
 	
 	private class NextListener implements View.OnClickListener {
