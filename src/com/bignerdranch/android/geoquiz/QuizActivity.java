@@ -45,11 +45,6 @@ public class QuizActivity extends Activity {
 	
 	private boolean mIsCheater;
 
-	/**
-	 * Creates the activity, setting up the initial view and the behavior of the Buttons.
-	 * 
-	 * @param savedInstanceState instance information used to restore activity to its previous state. 
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
